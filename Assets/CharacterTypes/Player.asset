@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77e51a0e398eb7d43a38ea0cd4fd3581, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
-  _name: 
+  _name: Player
   _talkingSprite: {fileID: 0}
   _currentHealth: 0
   _maxHealth: 0
   _strength: 0
-  _speed: 0
+  _speed: 15
   _def: 0
   _luck: 0
