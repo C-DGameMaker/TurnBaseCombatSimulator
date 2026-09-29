@@ -1089,6 +1089,7 @@ MonoBehaviour:
   playerTeam: []
   enemyTeam: []
   state: 0
+  turnState: 1
 --- !u!4 &1802603366
 Transform:
   m_ObjectHideFlags: 0

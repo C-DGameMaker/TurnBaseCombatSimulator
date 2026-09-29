@@ -26,7 +26,7 @@ public class BattleSystem : MonoBehaviour
     public List<GameObject> enemyTeam;
 
     public BattleStates state;
-    TurnState turnState;
+    public TurnState turnState;
 
     void Start()
     {
@@ -43,6 +43,11 @@ public class BattleSystem : MonoBehaviour
         OnBattleStateChange(newState);
     }
 
+    public void TurnStateChange(TurnState newState)
+    {
+        turnState = newState; 
+    }
+
 
     private void OnBattleStateChange(BattleStates newState)
     {
@@ -54,16 +59,56 @@ public class BattleSystem : MonoBehaviour
             case BattleStates.init:
                 SetBattle();
                 SetTeams();
+                ResetTurns();
                 BattleStateChange(BattleStates.Inbattle);
+                break;
+
+            case BattleStates.Inbattle:
+                CheckTurn();
                 break;
         
         }
 
     }
 
-    private void SetTurn()
+    private void ResetTurns()
     {
-        
+        DisplayScriptableClass currentTarget;
+
+        foreach(var battle in battleList)
+        {
+            currentTarget = battle.GetComponent<DisplayScriptableClass>();
+
+            if(currentTarget.characterData.hasDoneATurn == true)
+            {
+                currentTarget.characterData.hasDoneATurn = false;
+            }
+        }
+    }
+
+    private void CheckTurn()
+    {
+        DisplayScriptableClass currentTarget;
+
+        foreach (GameObject battle in battleList)
+        {
+            currentTarget = battle.GetComponent<DisplayScriptableClass>();
+
+            if (currentTarget.characterData.hasDoneATurn == false)
+            {
+                if(battle.CompareTag("Player"))
+                {
+                    TurnStateChange(TurnState.playerTurn);
+                    break;
+                }
+                else
+                {
+                    TurnStateChange(TurnState.enemyTurn);
+                    break;
+                }
+                
+            }
+        }
     }
 
     private void SetTeams()
@@ -91,8 +136,6 @@ public class BattleSystem : MonoBehaviour
         }
 
         speedList = speedList.OrderByDescending(speed => speed.characterData._speed).ToList();
-
-
 
         foreach (DisplayScriptableClass battle in speedList)
         {

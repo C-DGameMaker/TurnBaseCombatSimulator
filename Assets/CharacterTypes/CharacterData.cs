@@ -10,4 +10,6 @@ public class CharacterData : CharacterTypes
     public int _speed;
     public int _def;
     public int _luck;
+
+    public bool hasDoneATurn;
 }
