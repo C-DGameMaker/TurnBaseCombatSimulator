@@ -13,7 +13,8 @@ public enum BattleStates
 public enum TurnState
 { 
     playerTurn,
-    enemyTurn
+    enemyTurn,
+    allTurnsPassed
 }
 
 
@@ -46,6 +47,7 @@ public class BattleSystem : MonoBehaviour
     public void TurnStateChange(TurnState newState)
     {
         turnState = newState; 
+        OnTurnStateChange(newState);
     }
 
 
@@ -66,9 +68,33 @@ public class BattleSystem : MonoBehaviour
             case BattleStates.Inbattle:
                 CheckTurn();
                 break;
-        
+
+            case BattleStates.playerTeamWin:
+                Debug.Log("You won");
+                break;
+
+            case BattleStates.enemyTeamWin:
+                Debug.Log("you Lost");
+                break;
+
         }
 
+    }
+
+    private void OnTurnStateChange(TurnState newState)
+    {
+        switch (newState)
+        {
+            default:
+                break;
+
+            case TurnState.allTurnsPassed:
+                ResetTurns();
+                CheckTurn();
+                CheckWin();
+                break;
+
+        }
     }
 
     private void ResetTurns()
@@ -101,14 +127,21 @@ public class BattleSystem : MonoBehaviour
                     TurnStateChange(TurnState.playerTurn);
                     break;
                 }
-                else
+                else if(battle.CompareTag("Enemy"))
                 {
                     TurnStateChange(TurnState.enemyTurn);
                     break;
                 }
-                
+            }
+
+            else
+            {
+                TurnStateChange(TurnState.allTurnsPassed);
+                break;
             }
         }
+
+
     }
 
     private void SetTeams()
@@ -119,7 +152,7 @@ public class BattleSystem : MonoBehaviour
             {
                 playerTeam.Add(battle);
             }
-            else
+            else if(battle.CompareTag("Enemy"))
             {
                 enemyTeam.Add(battle);
             }
@@ -140,6 +173,22 @@ public class BattleSystem : MonoBehaviour
         foreach (DisplayScriptableClass battle in speedList)
         {
             battleList.Add(battle.gameObject);
+        }
+    }
+
+    private void CheckWin()
+    {
+        if (playerTeam.Count < 0)
+        {
+            BattleStateChange(BattleStates.enemyTeamWin);
+        }
+        else if(enemyTeam.Count < 0)
+        {
+            BattleStateChange(BattleStates.playerTeamWin);
+        }
+        else
+        {
+            BattleStateChange(BattleStates.Inbattle);
         }
     }
 }

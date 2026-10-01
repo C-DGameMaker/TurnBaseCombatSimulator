@@ -20,3 +20,4 @@ MonoBehaviour:
   _speed: 15
   _def: 0
   _luck: 0
+  hasDoneATurn: 0
